@@ -17,11 +17,6 @@ from rlpyt.agents.qpg.sac_agent import SacAgent
 from rlpyt.runners.minibatch_rl import MinibatchRlEval
 from rlpyt.utils.logging.context import logger_context
 
-# load metaworld and register
-import gym
-from metaworld.envs.mujoco import register_custom_envs
-register_custom_envs()
-
 
 def build_and_train(env_id="Hopper-v3", run_ID=0, cuda_idx=None):
     sampler = SerialSampler(
@@ -33,7 +28,7 @@ def build_and_train(env_id="Hopper-v3", run_ID=0, cuda_idx=None):
         max_decorrelation_steps=0,
         eval_n_envs=10,
         eval_max_steps=int(51e3),
-        eval_max_trajectories=10,
+        eval_max_trajectories=50,
     )
     algo = SAC()  # Run with defaults.
     agent = SacAgent()
@@ -41,13 +36,13 @@ def build_and_train(env_id="Hopper-v3", run_ID=0, cuda_idx=None):
         algo=algo,
         agent=agent,
         sampler=sampler,
-        n_steps=2e6,
-        log_interval_steps=5e3,
+        n_steps=1e6,
+        log_interval_steps=1e4,
         affinity=dict(cuda_idx=cuda_idx),
     )
     config = dict(env_id=env_id)
     name = "sac_" + env_id
-    log_dir = env_id.split('-')[0]
+    log_dir = "example_1"
     with logger_context(log_dir, run_ID, name, config):
         runner.train()
 

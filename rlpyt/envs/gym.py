@@ -24,6 +24,8 @@ class GymEnvWrapper(Wrapper):
             time_limit = isinstance(self.env, TimeLimit)
         if time_limit:
             info["timeout"] = False  # gym's TimeLimit.truncated invalid name.
+        else:
+            info["timeout"] = False
         self._time_limit = time_limit
         self.action_space = GymSpaceWrapper(
             space=self.env.action_space,
